@@ -114,7 +114,9 @@ dmypy.json
 *.swo
 *~
 
-# Logs
+# Local configs
+providers.json
+*.local.json
 logs/
 testlog/
 
