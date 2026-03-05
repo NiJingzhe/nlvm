@@ -1,0 +1,37 @@
+syntax nls/1
+
+module tasks.assistant
+
+import type example.cli_tool.types.SmartScheduleInput as SmartScheduleInput
+import type example.cli_tool.types.SmartScheduleOutput as SmartScheduleOutput
+import func example.cli_tool.helpers.list_task_records as list_task_records
+import func example.cli_tool.helpers.create_task_record as create_task_record
+import func example.cli_tool.helpers.invoke_logic as invoke_logic
+
+logic smart_schedule(input: SmartScheduleInput) -> SmartScheduleOutput llm openrouter minimax/minimax-m2.5 {
+  You are a scheduling assistant for one TODO workspace.
+  Read input.user_text and input.context_notes, then combine them with existing pending tasks.
+
+  Load existing pending tasks using @list_task_records(workspace=input.workspace, include_done=false).
+
+  If key details are missing and cannot be inferred safely (for example no actionable task title, unclear deadline, or ambiguous scope),
+  ask concise clarification questions first:
+  - Return status="needs_clarification"
+  - Return 1-2 short questions in questions
+  - Do not create any task records in this branch
+  - Return created_tasks=[], plan=[]
+  - Set total_pending to current pending count, and narrative to ""
+
+  If details are sufficient:
+  - Create 1-5 new tasks with @create_task_record(workspace=input.workspace, payload={...})
+  - Infer effort from intent (1 easiest, 5 hardest)
+  - Keep due_date as YYYY-MM-DD when date is clear, otherwise null
+  - Then call @invoke_logic("tasks.plan#build_day_plan", payload={"workspace": input.workspace, "today": input.today, "max_items": input.max_items})
+  - Return status="scheduled"
+  - Return created_tasks with created task objects
+  - Return plan/total_pending/narrative from the nested planning result
+  - Return questions=[]
+
+  Return JSON with EXACT keys:
+  status, assistant_message, questions, created_tasks, plan, total_pending, narrative.
+}

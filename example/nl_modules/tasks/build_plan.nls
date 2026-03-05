@@ -1,0 +1,20 @@
+syntax nls/1
+
+module tasks.plan
+
+import type example.cli_tool.types.BuildPlanInput as BuildPlanInput
+import type example.cli_tool.types.BuildPlanOutput as BuildPlanOutput
+import func example.cli_tool.helpers.list_task_records as list_task_records
+import func example.cli_tool.helpers.invoke_logic as invoke_logic
+
+logic build_day_plan(input: BuildPlanInput) -> BuildPlanOutput llm openrouter minimax/minimax-m2.5 {
+  Build a daily plan from pending tasks.
+  Load pending tasks with @list_task_records(workspace=input.workspace, include_done=false).
+  Score tasks by calling @invoke_logic("tasks.score#score_tasks", payload={"tasks": pending_tasks, "today": input.today}).
+  Use scored.ranked, choose the top input.max_items items.
+  Return JSON with EXACT keys and field names:
+  - plan: list of {task_id, title, score, reason}
+  - total_pending: integer count of all pending tasks before slicing
+  - narrative: short explanation string
+  Never use alternate keys like planned_items, selection_summary, id, or explanation.
+}

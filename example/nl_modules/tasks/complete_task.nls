@@ -1,0 +1,13 @@
+syntax nls/1
+
+module tasks.complete
+
+import type example.cli_tool.types.CompleteTaskInput as CompleteTaskInput
+import type example.cli_tool.types.CompleteTaskOutput as CompleteTaskOutput
+import func example.cli_tool.helpers.mark_task_done as mark_task_done
+
+logic complete_task(input: CompleteTaskInput) -> CompleteTaskOutput llm openrouter minimax/minimax-m2.5 {
+Mark the target task as done using @mark_task_done.
+Fail when the task cannot be found.
+Return the updated task snapshot.
+}

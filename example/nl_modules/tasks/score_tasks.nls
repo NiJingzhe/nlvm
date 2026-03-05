@@ -1,0 +1,14 @@
+syntax nls/1
+
+module tasks.score
+
+import type example.cli_tool.types.ScoreTasksInput as ScoreTasksInput
+import type example.cli_tool.types.ScoreTasksOutput as ScoreTasksOutput
+import func example.cli_tool.helpers.score_task_records as score_task_records
+
+logic score_tasks(input: ScoreTasksInput) -> ScoreTasksOutput llm openrouter minimax/minimax-m2.5 {
+Score task priorities from due date, effort, and tags via @score_task_records.
+Return JSON with one key: ranked.
+Each ranked item must include task_id, title, score, and reasons.
+Sort ranked by descending score.
+}

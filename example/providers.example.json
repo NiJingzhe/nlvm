@@ -1,0 +1,11 @@
+{
+  "openrouter": [
+    {
+      "model_name": "minimax/minimax-m2.5",
+      "base_url": "https://openrouter.ai/api/v1",
+      "api_keys": ["<YOUR_OPENROUTER_KEY>"],
+      "max_retries": 3,
+      "retry_delay": 1
+    }
+  ]
+}

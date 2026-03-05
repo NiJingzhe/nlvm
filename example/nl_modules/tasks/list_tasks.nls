@@ -1,0 +1,12 @@
+syntax nls/1
+
+module tasks.list
+
+import type example.cli_tool.types.ListTasksInput as ListTasksInput
+import type example.cli_tool.types.ListTasksOutput as ListTasksOutput
+import func example.cli_tool.helpers.list_task_records as list_task_records
+
+logic list_tasks(input: ListTasksInput) -> ListTasksOutput llm openrouter minimax/minimax-m2.5 {
+Load tasks for a workspace through @list_task_records.
+Apply include_done flag and return aggregate counters.
+}

@@ -1,0 +1,15 @@
+syntax nls/1
+
+module tasks.create
+
+import type example.cli_tool.types.CreateTaskInput as CreateTaskInput
+import type example.cli_tool.types.CreateTaskOutput as CreateTaskOutput
+import func example.cli_tool.helpers.list_task_records as list_task_records
+import func example.cli_tool.helpers.create_task_record as create_task_record
+
+logic create_task(input: CreateTaskInput) -> CreateTaskOutput llm openrouter minimax/minimax-m2.5 {
+Create a task from the provided input object.
+Use @list_task_records to detect duplicate titles.
+Persist the new task with @create_task_record.
+Return the created task plus a dedupe hint when duplicates exist.
+}
